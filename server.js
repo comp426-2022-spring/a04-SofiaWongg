@@ -1,3 +1,6 @@
+const express = require('express')
+const app = express()
+
 // Require minimist module
 const args = require('minimist')(process.argv.slice(2))
 // See what is stored in the object produced by minimist
@@ -53,8 +56,7 @@ app.use((req, res, next) => {
 })
 
 //start of mine
-const express = require('express')
-const app = express()
+
 
 args['port']
 
