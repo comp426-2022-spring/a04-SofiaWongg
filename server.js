@@ -26,7 +26,7 @@ if (args.help || args.h) {
 }
 
 //log - endpoint
-if (log) {
+if (args.log == true) {
     const log = fs.createWriteStream('access.log', {flags: 'a'})
     app.use(morgan('combined', {stream: accessLog}))
 }
