@@ -63,7 +63,7 @@ args['port']
 var port = args.port || process.env.PORT || 5000;
 
 const server = app.listen(port, () => {
-  console.log('App is running on port %PORT%'.replace('%PORT%', port))
+  console.log(`App is running on port %PORT%`.replace(`%PORT%`, port))
 });
 
 
