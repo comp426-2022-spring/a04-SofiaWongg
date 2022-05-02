@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 
+// Create connection to database
+const logdb = require("./database")
+
 // Require minimist module
 const args = require('minimist')(process.argv.slice(2))
 // See what is stored in the object produced by minimist
@@ -49,7 +52,7 @@ app.use((req, res, next) => {
         useragent: req.headers['user-agent']
     }
 
-    const stmt = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+    const stmt = logdb.prepare(`INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
     const info = stmt.run(String(logdata.remoteaddr), String(logdata.remoteuser), String(logdata.time), String(logdata.method, logdata.url), String(logdata.protocol), String(logdata.httpversion), String(logdata.status), String(logdata.referer), String(logdata.useragent))
     res.status(200).json(info);
     next();
@@ -141,7 +144,7 @@ app.get('/app/flip/call/tails', (req, res) => {
 if (args.debug) {
     app.get('/app/log/access', (req, res) =>{
       try{
-        const stmt = db.prepare('Select * FROM accesslog').all();
+        const stmt = logdb.prepare('Select * FROM accesslog').all();
         res.status(200).json(stmt);
       }
       catch {
