@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 
 // Create connection to database
-const logdb = require("./database")
+const logdb = require('./database')
 
 // Require minimist module
 const args = require('minimist')(process.argv.slice(2))
@@ -35,6 +35,8 @@ if (args.help || args.h) {
 if (args.log == true) {
     const log = fs.createWriteStream('access.log', {flags: 'a'})
     app.use(morgan('combined', {stream: accessLog}))
+}else{
+  console.log("Not working")
 }
 
 //Middleware
@@ -119,7 +121,6 @@ function flipACoin(call) {
 
 app.get('/app', (req, res)=>{
   res.status(200).end('OK')
-  res.type('text/plain')
 })
 
 app.get('/app/flip', (req, res) => {
