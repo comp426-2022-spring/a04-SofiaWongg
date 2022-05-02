@@ -140,8 +140,13 @@ app.get('/app/flip/call/tails', (req, res) => {
 //added endpoint:
 if (args.debug) {
     app.get('/app/log/access', (req, res) =>{
-        const stmt = db.prepare("Select * FROM accesslog").all();
+      try{
+        const stmt = db.prepare('Select * FROM accesslog').all();
         res.status(200).json(stmt);
+      }
+      catch {
+        console.error("oops - log/access")
+      }
     });
     app.get("/app/error", (req, res) => {
         throw new Error("Error Test Successful");
