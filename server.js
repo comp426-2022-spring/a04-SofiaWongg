@@ -35,6 +35,8 @@ if (args.help || args.h) {
 if (args.log == true) {
     const log = fs.createWriteStream('access.log', {flags: 'a'})
     app.use(morgan('combined', {stream: accessLog}))
+}else{
+  console.log("Not working")
 }
 
 //Middleware
@@ -119,7 +121,6 @@ function flipACoin(call) {
 
 app.get('/app', (req, res)=>{
   res.status(200).end('OK')
-  res.type('text/plain')
 })
 
 app.get('/app/flip', (req, res) => {
@@ -141,7 +142,7 @@ app.get('/app/flip/call/tails', (req, res) => {
 })
 
 //added endpoint:
-if (args.debug) {
+if (args.debug || args.d) {
     app.get('/app/log/access', (req, res) =>{
       try{
         const stmt = logdb.prepare('Select * FROM accesslog').all();
