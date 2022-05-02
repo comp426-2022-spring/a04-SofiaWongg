@@ -1,9 +1,6 @@
 const express = require('express')
 const app = express()
 
-// Create connection to database
-const logdb = require('./database')
-
 // Require minimist module
 const args = require('minimist')(process.argv.slice(2))
 // See what is stored in the object produced by minimist
@@ -35,8 +32,6 @@ if (args.help || args.h) {
 if (args.log == true) {
     const log = fs.createWriteStream('access.log', {flags: 'a'})
     app.use(morgan('combined', {stream: accessLog}))
-}else{
-  console.log("Not working")
 }
 
 //Middleware
@@ -54,8 +49,8 @@ app.use((req, res, next) => {
         useragent: req.headers['user-agent']
     }
 
-    const stmt = logdb.prepare(`INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    const info = stmt.run(logdata.remoteaddr, logdata.remoteuser, logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.httpversion, logdata.status, logdata.referrer, logdata.useragent)
+    const stmt = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+    const info = stmt.run(String(logdata.remoteaddr), String(logdata.remoteuser), String(logdata.time), String(logdata.method, logdata.url), String(logdata.protocol), String(logdata.httpversion), String(logdata.status), String(logdata.referer), String(logdata.useragent))
     res.status(200).json(info);
     next();
 })
@@ -121,6 +116,7 @@ function flipACoin(call) {
 
 app.get('/app', (req, res)=>{
   res.status(200).end('OK')
+  res.type('text/plain')
 })
 
 app.get('/app/flip', (req, res) => {
@@ -144,13 +140,8 @@ app.get('/app/flip/call/tails', (req, res) => {
 //added endpoint:
 if (args.debug) {
     app.get('/app/log/access', (req, res) =>{
-      try{
-        const stmt = logdb.prepare('Select * FROM accesslog').all();
+        const stmt = db.prepare('Select * FROM accesslog').all();
         res.status(200).json(stmt);
-      }
-      catch {
-        console.error("oops - log/access")
-      }
     });
     app.get("/app/error", (req, res) => {
         throw new Error("Error Test Successful");
