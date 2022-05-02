@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 
 // Create connection to database
-const logdb = require("./database")
+const logdb = require('./database')
 
 // Require minimist module
 const args = require('minimist')(process.argv.slice(2))
