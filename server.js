@@ -142,7 +142,7 @@ app.get('/app/flip/call/tails', (req, res) => {
 })
 
 //added endpoint:
-if (args.debug || args.d) {
+if (args.debug) {
     app.get('/app/log/access', (req, res) =>{
       try{
         const stmt = logdb.prepare('Select * FROM accesslog').all();
